@@ -42,3 +42,12 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+项目结构
+/src 
+    asserts 静态资源
+    componnets 公共组件
+    pages 页面组件
+    utils 公共函数
+    App.txs 根组件
+    index.tsx 项目入口

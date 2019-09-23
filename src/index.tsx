@@ -2,7 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import './index.css';
+
+// 导入组件库样式
 import 'antd-mobile/dist/antd-mobile.css'
+// 导入字体图标样式
+import './asserts/fonts/iconfont.css'
 
 import App from './App';
 

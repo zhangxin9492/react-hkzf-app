@@ -1,0 +1,22 @@
+* {
+    touch-action: none
+    /* 解决轮播报错 */
+}
+.navBarList {
+    text-align: center;
+    padding-top: 5px;
+}
+.navBarList p {
+    padding-top: 5px;
+}
+.navBarList img {
+    width: 50px;
+}
+.rentGroup {
+    padding: 12px 0;
+}
+.rentGroupTitle {
+    line-height: 45px;
+    background: #f6f5f6;
+    padding: 0 12px;
+}

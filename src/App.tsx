@@ -1,16 +1,12 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import Index from './pages/Index/index'
-import Home from './pages/Home'
-
 const App: React.FC = () => {
   return (
       <Router>
-          {/* <Link to="/">首页</Link> */}
-          {/* <Link to="/home">个人中心</Link>   */}
-          <Route path="/" exact component={Index}></Route>
-          {/* <Route path="/home" component={Home}></Route> */}
+          <Route path="/" render={() => <Redirect to="/index/index" />}></Route>
+          <Route path="/index" component={Index}></Route>
       </Router>
   );
 }

@@ -25,6 +25,7 @@ const TABR_ITEMLIST = [
     {title: '资讯',icon: 'icon-infom',path:'/index/news'},
     {title: '我的',icon: 'icon-my',path:'/index/profile'}
 ]
+const win:any = window
 export default class Index extends React.Component<IProps,IState> {
     constructor(props: any) {
         super(props);
@@ -36,6 +37,12 @@ export default class Index extends React.Component<IProps,IState> {
     }
     componentDidMount() {
         console.log(this.props, this.props.location.pathname)
+        function myFun( result: any ) {
+            var cityName = result.name;
+            // map.setCenter(cityName);
+        }
+        let myCity = new win.BMap.LocalCity();
+        myCity.get(myFun)
     }
     componentDidUpdate(pre:any) {
         if(pre.location.pathname != this.props.location.pathname) {

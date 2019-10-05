@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import './index.css';
-
+import './index.css'
+// react-virtualized组件库样式
+import 'react-virtualized/styles.css'
 // 导入组件库样式
 import 'antd-mobile/dist/antd-mobile.css'
 // 导入字体图标样式

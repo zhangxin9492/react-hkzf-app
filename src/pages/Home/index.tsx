@@ -1,12 +1,13 @@
 import React from 'react'
 import { Carousel,Flex,Grid } from 'antd-mobile'
-import { Link } from "react-router-dom";
+import { Link, Route } from "react-router-dom"
 import axios from 'axios'
 import './index.css'
 import nav1 from '../../asserts/images/nav-1.png'
 import nav2 from '../../asserts/images/nav-2.png'
 import nav3 from '../../asserts/images/nav-3.png'
 import nav4 from '../../asserts/images/nav-4.png'
+import {getCurrentCity,getCity} from '../../utils/utils'
 interface IProps {
     location: any,
     history: any
@@ -18,7 +19,9 @@ interface IProps {
     navBarList: Array<Object>
     rentGrouplist: Array<Object>
     newsList: Array<Object>
+    cityName: String
 }
+const win:any = window
 export default class Homeindex extends React.Component<IProps,IState> {
     state = {
         // 类型检查???
@@ -32,7 +35,8 @@ export default class Homeindex extends React.Component<IProps,IState> {
             {pic: nav4, name: '去出租', id: 4,url: '/index/list'}
         ],
         rentGrouplist: [{desc: "",id: 0,imgSrc: "",title:""}],
-        newsList: [{date: '',from: '',id: 0,imgSrc: '',title:''}]
+        newsList: [{date: '',from: '',id: 0,imgSrc: '',title:''}],
+        cityName: '上海', // 城市名称
     }
     async getImgList() {
         let res = await axios.get('http://localhost:8080/home/swiper')
@@ -73,7 +77,12 @@ export default class Homeindex extends React.Component<IProps,IState> {
             </Flex.Item>
         ))
     }
-    componentDidMount() {
+    async componentDidMount() {
+        // 获取当前城市定位
+        const curCity:any = await getCurrentCity()
+        this.setState({
+            cityName: curCity.label
+        })
         this.getImgList()
         this.getGroup()
         this.getNews()
@@ -124,7 +133,7 @@ export default class Homeindex extends React.Component<IProps,IState> {
                                 className="location"
                                 onClick={() => this.props.history.push('/citylist')}
                             >
-                                <span>上海</span>
+                                <span>{this.state.cityName}</span>
                                 <i className="iconfont icon-arrow" />
                             </div>
 

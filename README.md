@@ -56,7 +56,7 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 ## 长列表渲染
     1.懒加载渲染,分页渲染,一般用于数据量较少的业务,一般小于1000条数据,因为大量数据会造成大量数据回流重绘,造成页面卡顿
     2.可视区渲染,利用算法只渲染可视区的部分,从根本上解决性能问题 react-virtualized
-## 2019几个计划
+## 2019末几个计划
     1.熟练掌握react+typescript
     2.css3样式+css3动画回顾+熟练掌握
     3.2.x版本vue源码继续学习，并且对照3.x版本

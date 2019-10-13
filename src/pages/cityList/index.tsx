@@ -3,8 +3,10 @@ import axios from 'axios'
 import { NavBar,Icon,Toast } from 'antd-mobile'
 import { List,AutoSizer } from 'react-virtualized'
 import './index.css'
-import Index from '../Index'
+// import Index from '../Index'
 import { setCity } from '../../utils/utils'
+
+import NavHeader from '../../components/navHeader/index'
 interface IProps {
     history: any
 }
@@ -133,11 +135,13 @@ export default class CityList extends React.Component<IProps,IState> {
     render() {
         return (
             <div className="cityList">
-                <NavBar
+                {/* <NavBar
                 mode="light"
                 icon={<Icon type="left" />}
                 onLeftClick={() => this.props.history.push('/index/index')}
-                >城市选择</NavBar>
+                >城市选择</NavBar> */}
+                {/* 坑----组件首字母需要大写 */}
+                <NavHeader>城市选择</NavHeader>
                 {/* 城市列表 */}
                 <AutoSizer>
                     {

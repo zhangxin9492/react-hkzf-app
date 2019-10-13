@@ -1,5 +1,6 @@
 import axios from 'axios'
 const win:any = window
+// 获取当前城市定位
 const getCurrentCity = () => {
     let curCity = getCity()
     // 本地存储无数据

@@ -32,4 +32,38 @@ const getCity = () => {
 const setCity = (curCity:Object) => {
     localStorage.setItem('curCity',JSON.stringify(curCity))
 }
-export {getCurrentCity, getCity, setCity}
+// 判断机型是否是iphonex及其以上
+function isMoreIPhonex() {
+    var isp = /iphone/gi.test(window.navigator.userAgent),
+        dpr = window.devicePixelRatio,
+        dpi = window.devicePixelRatio,
+        w   = window.screen.width,
+        h   = window.screen.height;
+    // iPhone X、iPhone XS, 11pro
+    var isIPhoneX = isp && dpr && dpi === 3 && w === 375 && h === 812;
+    // iPhone XS Max 11 max
+    var isIPhoneXSMax = isp && dpr && dpi === 3 && w === 414 && h === 896;
+    // iPhone XR 11
+    var isIPhoneR = isp && dpr && dpi === 2 && w === 414 && h === 896;
+
+    if (isIPhoneX || isIPhoneXSMax || isIPhoneXR) {
+        return true
+    } else {
+        return false
+}
+// 判断设备是ios 和andrid 或者 pc
+  judgeClient() {
+    let u = navigator.userAgent;
+    let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1;   //判断是否是 android终端
+    let isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);     //判断是否是 iOS终端
+    console.log('是否是Android：' + isAndroid); //true,false
+    console.log('是否是iOS：' + isIOS);
+    if(isAndroid){
+      return 'Android';
+    }else if(isIOS){
+      return 'IOS';
+    }else{
+      return 'PC';
+    }
+  },
+export {getCurrentCity, getCity, setCity,isMoreIPhonex}

@@ -34,11 +34,11 @@ const setCity = (curCity:Object) => {
 }
 // 判断机型是否是iphonex及其以上
 function isMoreIPhonex() {
-    var isp = /iphone/gi.test(window.navigator.userAgent),
-        dpr = window.devicePixelRatio,
-        dpi = window.devicePixelRatio,
-        w   = window.screen.width,
-        h   = window.screen.height;
+    var isp = /iphone/gi.test(win.navigator.userAgent),
+        dpr = win.devicePixelRatio,
+        dpi = win.devicePixelRatio,
+        w   = win.screen.width,
+        h   = win.screen.height;
     // iPhone X、iPhone XS, 11pro
     var isIPhoneX = isp && dpr && dpi === 3 && w === 375 && h === 812;
     // iPhone XS Max 11 max

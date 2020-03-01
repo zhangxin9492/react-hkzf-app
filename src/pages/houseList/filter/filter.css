@@ -1,0 +1,42 @@
+.oprate-button {
+    display: flex;
+}
+.oprate-button .btn1 {
+    flex: 1;
+    border-radius: 0;
+    color: #21b97a;
+}
+.oprate-button .btn2 {
+    flex: 2;
+    background-color: #21b97a;
+    border-radius: 0;
+    color: #fff;
+}
+.filter {
+    position: relative;
+    z-index: 99;
+    background-color: #fff;
+}
+.filter .content {
+    position: relative;
+    z-index: 99;
+    background-color: #fff;
+    transition: all 0.5s;
+
+}
+.filterMore {
+    width: 80%;
+    position: fixed;
+    top: 0;
+    right: -80%;
+    /* right: 0; */
+    bottom: 0;
+    background-color: #fff;
+    z-index: 101;
+    transition: all 0.5s;
+}
+.filterMore.active {
+    /* left: 80px; */
+    /* transition: all 0.5s; */
+    transform: translateX(-100%);
+}

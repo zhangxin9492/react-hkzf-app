@@ -1,45 +1,46 @@
 import React from 'react'
-import { Carousel,Flex,Grid } from 'antd-mobile'
-import { Link, Route } from "react-router-dom"
-import axios from 'axios'
+import { Carousel, Flex, Grid } from 'antd-mobile'
+import { Link, Route } from 'react-router-dom'
+import { fetch } from '../../utils/fetch'
 import './index.css'
 import nav1 from '../../asserts/images/nav-1.png'
 import nav2 from '../../asserts/images/nav-2.png'
 import nav3 from '../../asserts/images/nav-3.png'
 import nav4 from '../../asserts/images/nav-4.png'
-import {getCurrentCity,getCity} from '../../utils/utils'
+import { getCurrentCity, getCity } from '../../utils/utils'
+import SearchHeader from '../../components/searchHeader/index'
 interface IProps {
-    location: any,
+    location: any
     history: any
-  }
-  interface IState {
-    imgList: Array<Object>,
-    imgHeight: Number | String,
-    isLoading: Boolean,
+}
+interface IState {
+    imgList: Array<Object>
+    imgHeight: Number | String
+    isLoading: Boolean
     navBarList: Array<Object>
     rentGrouplist: Array<Object>
     newsList: Array<Object>
     cityName: String
 }
-const win:any = window
-export default class Homeindex extends React.Component<IProps,IState> {
+const win: any = window
+export default class Homeindex extends React.Component<IProps, IState> {
     state = {
         // 类型检查???
-        imgList: [{id: 0,imgSrc: '',alt:''}],
+        imgList: [{ id: 0, imgSrc: '', alt: '' }],
         imgHeight: 176,
         isLoading: false,
         navBarList: [
-            {pic: nav1, name: '整租', id: 0,url: '/index/list'},
-            {pic: nav2, name: '合租', id: 1,url: '/index/list'},
-            {pic: nav3, name: '地图找房', id: 3,url: '/index/list'},
-            {pic: nav4, name: '去出租', id: 4,url: '/index/list'}
+            { pic: nav1, name: '整租', id: 0, url: '/index/list' },
+            { pic: nav2, name: '合租', id: 1, url: '/index/list' },
+            { pic: nav3, name: '地图找房', id: 3, url: '/index/list' },
+            { pic: nav4, name: '去出租', id: 4, url: '/index/list' }
         ],
-        rentGrouplist: [{desc: "",id: 0,imgSrc: "",title:""}],
-        newsList: [{date: '',from: '',id: 0,imgSrc: '',title:''}],
-        cityName: '上海', // 城市名称
+        rentGrouplist: [{ desc: '', id: 0, imgSrc: '', title: '' }],
+        newsList: [{ date: '', from: '', id: 0, imgSrc: '', title: '' }],
+        cityName: '上海' // 城市名称
     }
     async getImgList() {
-        let res = await axios.get('http://localhost:8080/home/swiper')
+        let res = await fetch.get('/home/swiper')
         this.setState({
             imgList: res.data.body,
             isLoading: true
@@ -51,16 +52,20 @@ export default class Homeindex extends React.Component<IProps,IState> {
             <a
                 key={item.id}
                 href="http://www.alipay.com"
-                style={{ display: 'inline-block', width: '100%', height: this.state.imgHeight }}
-                >
+                style={{
+                    display: 'inline-block',
+                    width: '100%',
+                    height: this.state.imgHeight
+                }}
+            >
                 <img
                     src={`http://localhost:8080${item.imgSrc}`}
                     alt=""
                     style={{ width: '100%', verticalAlign: 'top' }}
                     onLoad={() => {
-                    // fire window resize event to change height
-                        window.dispatchEvent(new Event('resize'));
-                        this.setState({ imgHeight: 'auto' });
+                        // fire window resize event to change height
+                        window.dispatchEvent(new Event('resize'))
+                        this.setState({ imgHeight: 'auto' })
                     }}
                 />
             </a>
@@ -70,8 +75,8 @@ export default class Homeindex extends React.Component<IProps,IState> {
     renderNavBar() {
         return this.state.navBarList.map(item => (
             <Flex.Item key={item.id}>
-                <Link to={ item.url }>
-                    <img src={item.pic} alt=""/>
+                <Link to={item.url}>
+                    <img src={item.pic} alt="" />
                     <p>{item.name}</p>
                 </Link>
             </Flex.Item>
@@ -79,7 +84,7 @@ export default class Homeindex extends React.Component<IProps,IState> {
     }
     async componentDidMount() {
         // 获取当前城市定位
-        const curCity:any = await getCurrentCity()
+        const curCity: any = await getCurrentCity()
         this.setState({
             cityName: curCity.label
         })
@@ -88,13 +93,13 @@ export default class Homeindex extends React.Component<IProps,IState> {
         this.getNews()
     }
     async getGroup() {
-        let res = await axios.get('http://localhost:8080/home/groups')
+        let res = await fetch.get('/home/groups')
         this.setState({
             rentGrouplist: res.data.body
         })
     }
     async getNews() {
-        let res = await axios.get('http://localhost:8080/home/news')
+        let res = await fetch.get('/home/news')
         this.setState({
             newsList: res.data.body
         })
@@ -104,13 +109,13 @@ export default class Homeindex extends React.Component<IProps,IState> {
         return this.state.newsList.map(item => (
             <div className="title-content" key={item.id}>
                 <div className="img">
-                    <img src={`http://localhost:8080${item.imgSrc}`} alt=""/>
+                    <img src={`http://localhost:8080${item.imgSrc}`} alt="" />
                 </div>
                 <div className="info">
                     <div className="topInfo">{item.title}</div>
                     <div className="botInfo">
                         <span>{item.from}</span>
-                        <span style={{float: 'right'}}>{item.date}</span>
+                        <span style={{ float: 'right' }}>{item.date}</span>
                     </div>
                 </div>
             </div>
@@ -121,40 +126,15 @@ export default class Homeindex extends React.Component<IProps,IState> {
             <div className="homeIndex">
                 {/* 首页轮播 */}
                 <div className="swiper">
-                    {this.state.isLoading &&  <Carousel
-                        autoplay={true}
-                        infinite
-                        >
-                        { this.rederSwiper() }
-                    </Carousel>}
-                    <Flex className="search-box">
-                        <Flex className="search-left">
-                            <div
-                                className="location"
-                                onClick={() => this.props.history.push('/citylist')}
-                            >
-                                <span>{this.state.cityName}</span>
-                                <i className="iconfont icon-arrow" />
-                            </div>
-
-                            <div
-                                className="search-form"
-                                onClick={() => this.props.history.push('/search')}
-                            >
-                                <i className="iconfont icon-seach" />
-                                <span>请输入小区或地址</span>
-                            </div>
-                            </Flex>
-                            <i
-                            className="iconfont icon-map"
-                            onClick={() => this.props.history.push('/map')}
-                            />
-                    </Flex>
-                </div>               
-               {/* 导航栏*/}              
-                <Flex className="navBarList">
-                   { this.renderNavBar() }
-                </Flex>
+                    {this.state.isLoading && (
+                        <Carousel autoplay={true} infinite>
+                            {this.rederSwiper()}
+                        </Carousel>
+                    )}
+                    <SearchHeader cityName={this.state.cityName}></SearchHeader>
+                </div>
+                {/* 导航栏*/}
+                <Flex className="navBarList">{this.renderNavBar()}</Flex>
                 {/* 租房小组模块 */}
                 <div className="rentGroup">
                     <Flex justify="between" className="rentGroupTitle">
@@ -162,19 +142,26 @@ export default class Homeindex extends React.Component<IProps,IState> {
                         <p>更多</p>
                     </Flex>
                     {/* 列表 */}
-                    <Grid 
-                        data={this.state.rentGrouplist} 
+                    <Grid
+                        data={this.state.rentGrouplist}
                         hasLine={true}
-                        activeStyle={true} 
+                        activeStyle={true}
                         columnNum={2}
                         renderItem={DataItem => (
-                            <Flex className="rentGroup-DataItem" justify="between">
+                            <Flex
+                                className="rentGroup-DataItem"
+                                justify="between"
+                            >
                                 <div>
                                     <p>家住回龙观</p>
                                     <p>归属的感觉</p>
                                 </div>
                                 <div>
-                                    <img width="50px" src={`http://localhost:8080/img/groups/2.png`} alt=""/>
+                                    <img
+                                        width="50px"
+                                        src={`http://localhost:8080/img/groups/2.png`}
+                                        alt=""
+                                    />
                                 </div>
                             </Flex>
                         )}
@@ -185,7 +172,7 @@ export default class Homeindex extends React.Component<IProps,IState> {
                     <div className="news-title">
                         <h3>最新资讯</h3>
                     </div>
-                    { this.renderNewsList() }
+                    {this.renderNewsList()}
                 </div>
             </div>
         )

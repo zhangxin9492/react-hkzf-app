@@ -1,9 +1,5 @@
-html,body,#root,.map,#container {
+.houseDetail {
     height: 100%;
-}
-.map {
     padding-top: 45px;
     box-sizing: border-box;
 }
-
-  

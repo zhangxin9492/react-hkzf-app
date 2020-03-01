@@ -3,34 +3,32 @@ import './index.css'
 import styles from './index.module.css'
 import NavHeader from '../../components/navHeader/index'
 import { getCurrentCity } from '../../utils/utils'
-import axios from 'axios'
-interface IProps {
-}
+import { fetch } from '../../utils/fetch'
+interface IProps {}
 interface IState {
-    map:any,
-    isShowHouseList: boolean,
+    map: any
+    isShowHouseList: boolean
     houseList: Array<any>
 }
 const win: any = window
-export default class Map extends React.Component<IProps,IState> {
+export default class Map extends React.Component<IProps, IState> {
     constructor(props: any) {
         super(props)
-        this.state= {
+        this.state = {
             map: null,
             isShowHouseList: false,
-            houseList:[]
+            houseList: []
         }
     }
     componentDidMount() {
         this.initRenderMap()
-        
     }
     // 初始化地图数据
     async initRenderMap() {
-        const curCity:any = await getCurrentCity()
-        let map = new win.BMap.Map("container")
+        const curCity: any = await getCurrentCity()
+        let map = new win.BMap.Map('container')
         // 移动地图关闭
-        map.addEventListener('movestart',() => {
+        map.addEventListener('movestart', () => {
             this.setState({
                 isShowHouseList: false
             })
@@ -39,15 +37,18 @@ export default class Map extends React.Component<IProps,IState> {
             map: map
         })
         let myGeo = new win.BMap.Geocoder()
-        myGeo.getPoint(curCity.label, async (point:any) => {      
-            if (point) {                 
-                map.centerAndZoom(point, 11) 
-                map.addControl(new win.BMap.ScaleControl())
-                map.addControl(new win.BMap.NavigationControl())
-                this.renderOverLaysById(curCity.value)                                          
-            }      
-         }, 
-         curCity.label)   
+        myGeo.getPoint(
+            curCity.label,
+            async (point: any) => {
+                if (point) {
+                    map.centerAndZoom(point, 11)
+                    map.addControl(new win.BMap.ScaleControl())
+                    map.addControl(new win.BMap.NavigationControl())
+                    this.renderOverLaysById(curCity.value)
+                }
+            },
+            curCity.label
+        )
     }
     // 获取所有房源数据
     // async getHousesList(id: string|number) {
@@ -66,89 +67,92 @@ export default class Map extends React.Component<IProps,IState> {
         } else {
             type = 'rect'
         }
-        return {nextZoom,type}
+        return { nextZoom, type }
     }
     // 根据id获取数据
-    async renderOverLaysById(id:number|string) {
-        let res = await axios.get('http://localhost:8080/area/map',{params:{id: id}})
-        let getHousesList:Array<any> = res.data.body
-         // 便利房源数据
-         const {nextZoom,type} = this.getCurrentZoom()
-         getHousesList.forEach(item => {
-             if (type === 'cicle') {
-                this.createOverLays(item,nextZoom)
-             } else if (type === 'rect') {
-                 this.createPlotOverflaw(item)
-             }
-           
-        })  
+    async renderOverLaysById(id: number | string) {
+        let res = await fetch.get('/area/map', {
+            params: { id: id }
+        })
+        let getHousesList: Array<any> = res.data.body
+        // 便利房源数据
+        const { nextZoom, type } = this.getCurrentZoom()
+        getHousesList.forEach(item => {
+            if (type === 'cicle') {
+                this.createOverLays(item, nextZoom)
+            } else if (type === 'rect') {
+                this.createPlotOverflaw(item)
+            }
+        })
     }
     // 创建覆盖物
-    createOverLays(item:any,nextZoom:any) {
-         // 转换坐标
-         let {coord:{latitude,longitude},value} = item
-         let point = new win.BMap.Point(longitude,latitude)
-         let opts = {
-             position : point,  // 指定文本标注所在的地理位置
-             //offset   : new win.BMap.Size(30, -30)    //设置文本偏移量
-         }
-         var label = new win.BMap.Label('',opts)
-         label.setContent(`
+    createOverLays(item: any, nextZoom: any) {
+        // 转换坐标
+        let {
+            coord: { latitude, longitude },
+            value
+        } = item
+        let point = new win.BMap.Point(longitude, latitude)
+        let opts = {
+            position: point // 指定文本标注所在的地理位置
+            //offset   : new win.BMap.Size(30, -30)    //设置文本偏移量
+        }
+        var label = new win.BMap.Label('', opts)
+        label.setContent(`
          <div class="${styles.bubble}">
              <p class="${styles.name}">${item.label}</p>
              <p>${item.count}套</p>
          </div>
          `)
-         label.setStyle(
-             {
-                 cursor: 'pointer',
-                 border: '0px solid rgb(255, 0, 0)',
-                 padding: '0px',
-                 whiteSpace: 'nowrap',
-                 fontSize: '12px',
-                 color: 'rgb(255, 255, 255)',
-                 textAlign: 'center'
-               }
-         )
+        label.setStyle({
+            cursor: 'pointer',
+            border: '0px solid rgb(255, 0, 0)',
+            padding: '0px',
+            whiteSpace: 'nowrap',
+            fontSize: '12px',
+            color: 'rgb(255, 255, 255)',
+            textAlign: 'center'
+        })
         //  label事件处理函数
-         label.addEventListener('click',() => {
-             console.log(1)
+        label.addEventListener('click', () => {
+            console.log(1)
             this.renderOverLaysById(value)
             // 清除之前的覆盖物
-            this.state.map.clearOverlays() 
-            this.state.map.centerAndZoom(point,nextZoom)             
-         })
-         this.state.map.addOverlay(label)  
+            this.state.map.clearOverlays()
+            this.state.map.centerAndZoom(point, nextZoom)
+        })
+        this.state.map.addOverlay(label)
     }
     // 创建小区覆盖物逻辑单独逻辑
-    createPlotOverflaw(item:any) {
+    createPlotOverflaw(item: any) {
         // 转换坐标
-        let {coord:{latitude,longitude},value} = item
-        let point = new win.BMap.Point(longitude,latitude)
+        let {
+            coord: { latitude, longitude },
+            value
+        } = item
+        let point = new win.BMap.Point(longitude, latitude)
         let opts = {
-            position : point,  // 指定文本标注所在的地理位置
+            position: point // 指定文本标注所在的地理位置
             //offset   : new win.BMap.Size(30, -30)    //设置文本偏移量
         }
-        var label = new win.BMap.Label('',opts)
+        var label = new win.BMap.Label('', opts)
         label.setContent(`
             <div class="${styles.bubble}">
                 <p class="${styles.name}">${item.label}</p>
                 <p>${item.count}套</p>
             </div>
         `)
-        label.setStyle(
-            {
-                cursor: 'pointer',
-                border: '0px solid rgb(255, 0, 0)',
-                padding: '0px',
-                whiteSpace: 'nowrap',
-                fontSize: '12px',
-                color: 'rgb(255, 255, 255)',
-                textAlign: 'center'
-              }
-        )
+        label.setStyle({
+            cursor: 'pointer',
+            border: '0px solid rgb(255, 0, 0)',
+            padding: '0px',
+            whiteSpace: 'nowrap',
+            fontSize: '12px',
+            color: 'rgb(255, 255, 255)',
+            textAlign: 'center'
+        })
         //  label事件处理函数
-        label.addEventListener('click',(e:any) => {
+        label.addEventListener('click', (e: any) => {
             // 被点击小区的 x 和 y
             const { clientX, clientY } = e.changedTouches[0]
             const x = window.innerWidth / 2 - clientX
@@ -156,12 +160,14 @@ export default class Map extends React.Component<IProps,IState> {
 
             //
             this.state.map.panBy(x, y)
-            this.getHouseList(value)         
+            this.getHouseList(value)
         })
-        this.state.map.addOverlay(label) 
+        this.state.map.addOverlay(label)
     }
-    async getHouseList(id:number) {
-        let res:any = await axios.get('http://localhost:8080/houses',{params:{cityId: id}})
+    async getHouseList(id: number) {
+        let res: any = await fetch.get('/houses', {
+            params: { cityId: id }
+        })
         if (res.data.body.list && res.data.body.list.length > 0) {
             this.setState({
                 houseList: res.data.body.list,
@@ -174,52 +180,60 @@ export default class Map extends React.Component<IProps,IState> {
         return this.state.houseList.map(item => (
             <div className={styles.house} key={item.houseCode}>
                 <div className={styles.imgWrap}>
-                <img
-                    className={styles.img}
-                    src={`http://localhost:8080${item.houseImg}`}
-                    alt=""
-                />
+                    <img
+                        className={styles.img}
+                        src={`http://localhost:8080${item.houseImg}`}
+                        alt=""
+                    />
                 </div>
                 <div className={styles.content}>
-                <h3 className={styles.title}>{item.title}</h3>
-                <div className={styles.desc}>{item.desc}</div>
-                <div>
-                    {item.tags.map((tag:any, index:any) => {
-                    const tagClass = `tag${index > 2 ? '3' : index + 1}` // tag1 or tag2 or tag3
-                    return (
-                        <span
-                        key={index}
-                        className={[styles.tag, styles[tagClass]].join(' ')}
-                        >
-                        {tag}
-                        </span>
-                    )
-                    })}
-                </div>
-                <div className={styles.price}>
-                    <span className={styles.priceNum}>{item.price}</span> 元/月
+                    <h3 className={styles.title}>{item.title}</h3>
+                    <div className={styles.desc}>{item.desc}</div>
+                    <div>
+                        {item.tags.map((tag: any, index: any) => {
+                            const tagClass = `tag${index > 2 ? '3' : index + 1}` // tag1 or tag2 or tag3
+                            return (
+                                <span
+                                    key={index}
+                                    className={[
+                                        styles.tag,
+                                        styles[tagClass]
+                                    ].join(' ')}
+                                >
+                                    {tag}
+                                </span>
+                            )
+                        })}
+                    </div>
+                    <div className={styles.price}>
+                        <span className={styles.priceNum}>{item.price}</span>{' '}
+                        元/月
+                    </div>
                 </div>
             </div>
-      </div>
         ))
     }
     render() {
         return (
             <div className="map">
                 <NavHeader>地图选房</NavHeader>
-                <div id="container"></div> 
+                <div id="container"></div>
                 <div
-                className={`${styles.houseList} ${this.state.isShowHouseList?styles.show:''}`}
+                    className={`${styles.houseList} ${
+                        this.state.isShowHouseList ? styles.show : ''
+                    }`}
                 >
-                <div className={styles.titleWrap}>
-                    <h1 className={styles.listTitle}>房屋列表</h1>
-                    <a className={styles.titleMore} href="/house/list">
-                    更多房源
-                    </a>
+                    <div className={styles.titleWrap}>
+                        <h1 className={styles.listTitle}>房屋列表</h1>
+                        <a className={styles.titleMore} href="/house/list">
+                            更多房源
+                        </a>
+                    </div>
+                    <div className={styles.houseItems}>
+                        {this.renderHouseList()}
+                    </div>
                 </div>
-                <div className={styles.houseItems}>{this.renderHouseList()}</div>
-                </div>
-            </div>            
+            </div>
         )
     }
 }

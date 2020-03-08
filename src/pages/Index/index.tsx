@@ -1,14 +1,16 @@
-import React from 'react'
+import React,{lazy} from 'react'
 import { TabBar } from 'antd-mobile'
 import './index.css'
 
 import { Route } from 'react-router-dom'
 // 导入组件
 import Homeindex from '../Home/index'
-import List from '../houseList/index'
-import News from '../news/idnex'
-import Profile from '../profile/index'
-
+// import List from '../houseList/index'
+// import News from '../news/idnex'
+// import Profile from '../profile/index'
+const List = React.lazy(() => import('../houseList/index'))
+const News = React.lazy(() => import('../news/idnex'))
+const Profile = React.lazy(() => import('../profile/index'))
 // interface Props { location: any }
 interface IProps {
     location: any

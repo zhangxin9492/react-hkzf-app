@@ -27,7 +27,8 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+### `npm run eject`  
+该操作会放开webpack配置项,放开之后不可逆,若要操作可以根据react-app-rewired重写webpack配置项
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 

@@ -67,3 +67,4 @@ To learn React, check out the [React documentation](https://reactjs.org/).
     2.非路由组件如果需要用到路由跳转需要使用高阶路由组件withRouter包裹，可以为当前组件带来路由的history match等属性
     3.使用withRouter包裹组件的时候定义props类型的时候需要interface AppProps extends RouteComponentProps，不然会报错，
     原因：原因时没有对withRouter所带来的prop下的属性没有进行类型判断
+## 测试是否能够提交
